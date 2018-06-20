@@ -31,9 +31,9 @@ export class PackageParser {
           const decorators = this.reflectionHost.getDecoratorsOfDeclaration(node);
           if (decorators && decorators.length) {
             decoratedClasses.push({ classNode: node, decorators });
-          } else {
-            walk(node);
           }
+        } else {
+          walk(node);
         }
       });
     };
