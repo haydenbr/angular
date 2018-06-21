@@ -10,7 +10,6 @@ ts_library(
     ]),
     deps = [
         "//packages/compiler-cli/src/ngcc",
-        "//packages/compiler-cli/test:test_utils",
     ],
 )
 
@@ -18,7 +17,7 @@ jasmine_node_test(
     name = "ngcc_unit",
     bootstrap = ["angular/tools/testing/init_node_no_angular_spec.js"],
     data = [
-      "unit/host/test_files/test.js",
+      "unit/host/test_files/fesm2015/test.js",
     ],
     deps = [
         ":ngcc_unit_lib",

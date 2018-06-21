@@ -22,3 +22,10 @@ NgForOf.propDecorators = {
   "ngForTrackBy": [{ type: Input },],
   "ngForTemplate": [{ type: Input },],
 };
+
+class SimpleClass {
+}
+
+function foo() {
+
+}
