@@ -8,7 +8,7 @@
 
 import * as ts from 'typescript';
 import { resolve } from 'path';
-import { Esm2015ReflectionHost } from '../../../src/ngcc/src/host/esm2015_host';
+import { Esm2015ReflectionHost } from '../../../../src/ngcc/src/host/esm2015_host';
 
 describe('Esm2015ReflectionHost', () => {
   let program: ts.Program;
@@ -16,7 +16,7 @@ describe('Esm2015ReflectionHost', () => {
   let file: ts.SourceFile;
 
   beforeEach(() => {
-    const packagePath = resolve(process.env.TEST_SRCDIR, 'angular/packages/compiler-cli/test/ngcc/host/test_files');
+    const packagePath = resolve(process.env.TEST_SRCDIR, 'angular/packages/compiler-cli/test/ngcc/unit/host/test_files');
     const entryPointPath = resolve(packagePath, 'test.js');
     program = createProgram(packagePath, entryPointPath);
     host = new Esm2015ReflectionHost(program.getTypeChecker());
@@ -39,6 +39,22 @@ describe('Esm2015ReflectionHost', () => {
     });
   });
 
+  describe('getClassDecorators()', () => {
+    it('should find the decorators on a class', () => {
+      const classSymbol = program.getTypeChecker().getSymbolAtLocation(getClassNode('NgForOf').name!)!;
+      console.log(classSymbol);
+      const decorators = host.getClassDecorators(classSymbol);
+      expect(decorators).toBeDefined();
+      expect(decorators.length).toEqual(1);
+
+      const decorator = decorators[0];
+      expect(decorator.name).toEqual('Directive');
+      expect(decorator.import).toEqual({ name: 'Directive', from: '@angular/core' });
+      expect(decorator.args!.map(arg => arg.getText())).toEqual([
+        `{ selector: '[ngFor][ngForOf]' }`
+      ]);
+    });
+  });
 
   function createProgram(packagePath: string, entryPointPath: string) {
     const options: ts.CompilerOptions = { allowJs: true, rootDir: packagePath };

@@ -9,9 +9,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {mainNgcc} from '../../src/ngcc/src/main';
+import {mainNgcc} from '../../../src/ngcc/src/main';
 
-import {TestSupport, isInBazel, setup} from '../test_support';
+import {TestSupport, isInBazel, setup} from '../../test_support';
 
 function setupNodeModules(support: TestSupport): void {
   const corePath = path.join(process.env.TEST_SRCDIR, 'angular/packages/core/npm_package');

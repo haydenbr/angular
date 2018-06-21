@@ -1,11 +1,12 @@
 load("//tools:defaults.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:defs.bzl", "jasmine_node_test")
 
+# Unit tests
 ts_library(
-    name = "ngcc_lib",
+    name = "ngcc_unit_lib",
     testonly = 1,
     srcs = glob([
-        "**/*_spec.ts",
+        "unit/**/*_spec.ts",
     ]),
     deps = [
         "//packages/compiler-cli/src/ngcc",
@@ -14,15 +15,44 @@ ts_library(
 )
 
 jasmine_node_test(
-    name = "ngcc",
+    name = "ngcc_unit",
     bootstrap = ["angular/tools/testing/init_node_no_angular_spec.js"],
     data = [
-      "host/test_files/test.js",
+      "unit/host/test_files/test.js",
+    ],
+    deps = [
+        ":ngcc_unit_lib",
+        "//tools/testing:node_no_angular",
+    ],
+)
+
+# Integration tests
+ts_library(
+    name = "ngcc_integration_lib",
+    testonly = 1,
+    srcs = glob([
+        "integration/**/*_spec.ts",
+    ]),
+    deps = [
+        "//packages/compiler-cli/src/ngcc",
+        "//packages/compiler-cli/test:test_utils",
+    ],
+)
+
+jasmine_node_test(
+    name = "ngcc_integration",
+    bootstrap = ["angular/tools/testing/init_node_no_angular_spec.js"],
+    data = [
       "//packages/core:npm_package",
       "//packages/common:npm_package",
     ],
     deps = [
-        ":ngcc_lib",
+        ":ngcc_integration_lib",
         "//tools/testing:node_no_angular",
     ],
+)
+
+# This rule will run all the test rule in this package
+test_suite(
+    name = "ngcc",
 )
