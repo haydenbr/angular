@@ -7,6 +7,7 @@
  */
 
 import {CommonModule, Location, LocationStrategy, PathLocationStrategy, PlatformLocation} from '@angular/common';
+import {HashLocationStrategy} from '@angular/common/src/common';
 import {MockPlatformLocation} from '@angular/common/testing';
 import {TestBed, inject} from '@angular/core/testing';
 
@@ -73,6 +74,38 @@ describe('Location Class', () => {
          location.back();
 
          expect(location.getState()).toEqual({url: 'test1'});
+       }));
+
+  });
+
+  describe('location.go() using hash location strategy', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [CommonModule],
+        providers: [
+          {provide: LocationStrategy, useClass: HashLocationStrategy},
+          {
+            provide: PlatformLocation,
+            useFactory: () => {
+              return new MockPlatformLocation(
+                  {startUrl: 'http://foo.com/original/path?param=true'});
+            }
+          },
+          {provide: Location, useClass: Location, deps: [LocationStrategy, PlatformLocation]},
+        ]
+      });
+    });
+
+    it('shoud keep the original url',
+       inject([Location, PlatformLocation], (location: Location, platform: PlatformLocation) => {
+
+         expect(platform.pathname).toEqual('/original/path');
+         expect(platform.search).toEqual('?param=true');
+
+         location.go('/test', '', {});
+
+         expect(platform.pathname).toEqual('/original/path');
+         expect(platform.search).toEqual('?param=true');
        }));
 
   });

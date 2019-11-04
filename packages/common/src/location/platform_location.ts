@@ -139,7 +139,7 @@ export class BrowserPlatformLocation extends PlatformLocation {
     if (supportsState()) {
       this._history.pushState(state, title, url);
     } else {
-      this.location.assign(url);
+      this.location.hash = url;
     }
   }
 
@@ -147,7 +147,7 @@ export class BrowserPlatformLocation extends PlatformLocation {
     if (supportsState()) {
       this._history.replaceState(state, title, url);
     } else {
-      this.location.replace(url);
+      this.location.hash = url;
     }
   }
 
